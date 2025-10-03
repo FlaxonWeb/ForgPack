@@ -11,7 +11,17 @@
 * **Custom Folder Names:** Define your own folder names for the BP and RP within the final `.mcaddon` file.
 * **Live Preview:** See a real-time JSON preview of your BP and RP manifests.
 * **Downloadable Addon:** Generates and downloads a ready-to-use `.mcaddon` zip file with basic file structures.
-
+```
+MyAddon.mcaddon
+├── behavior_packs
+│   └── [BP_FOLDER_NAME]
+│       ├── manifest.json  <- The generated Behavior Pack manifest
+│       └── scripts        <- Only if 'Add Script' is enabled
+│           └── main.js    <- Sample script file
+└── resource_packs
+    └── [RP_FOLDER_NAME]
+        └── manifest.json  <- The generated Resource Pack manifest
+```
 ---
 
 ## How to Use
