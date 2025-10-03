@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/x-icon" href="/img/icon.png">
+<title>Forg Pack</title>
+
+<style>
+@font-face {
+    font-family: 'Minecraft';
+    src: url('https://raw.githubusercontent.com/Minato-mba/Minato-mba.github.io/main/assets/fonts/minecraft.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Minecraft';
+    src: url('https://raw.githubusercontent.com/Minato-mba/Minato-mba.github.io/main/assets/fonts/minecraft-ten.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+:root {
+    --border-thickness: 3px;
+    --border-2x-thickness: calc(2 * var(--border-thickness));
+    --button-font-size: 18px;
+    --bg-dark: #2b2b2b;
+    --bg-darker: #1e1e1f;
+    --bg-medium: #48494a;
+    --bg-panel: #313233;
+    --border-color: #555;
+    --border-light: #727273;
+    --text-primary: #f0f0f0;
+    --text-secondary: #aaa;
+    --header-bg: #87CEEB;
+    --header-text: #1a1a1b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) var(--bg-darker);
+}
+
+body {
+    font-family: 'Minecraft', Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    width: 100vw;
+}
+
+header {
+    grid-column: 1 / span 5;
+    grid-row: 1;
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0px var(--border-2x-thickness) 0px #6ca8c5,
+        0 var(--border-2x-thickness) 0 var(--border-thickness) rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+main {
+    grid-column: 1 / span 5;
+    grid-row: 2;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#pack-editor {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sidebar {
+    grid-column: 1;
+    background-color: rgba(32, 32, 32, 0.9);
+    border-right: 2px solid var(--border-color);
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-content {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.pack-info h2, .options-column h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.form-group input[type="text"] {
+    background-color: var(--bg-panel);
+    border: var(--border-thickness) solid var(--bg-darker);
+    display: inline-block;
+    padding: 10px 15px;
+    box-shadow: 0px var(--border-2x-thickness) 0px var(--bg-darker) inset;
+    color: white;
+    font-family: 'Minecraft', sans-serif;
+    font-size: var(--button-font-size);
+    width: 100%;
+    border-radius: 0;
+    outline: none;
+}
+
+.sidebar-buttons {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 2px solid var(--border-color);
+    margin-top: auto;
+}
+
+.button {
+    display: inline-block;
+    font-family: 'Minecraft', sans-serif;
+    font-size: var(--button-font-size);
+    color: white;
+    padding: 8px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.05s ease-in-out;
+    min-width: 150px;
+}
+
+.button.primary {
+    background-color: #0d6efd;
+    border: var(--border-thickness) solid #4a92fd;
+    box-shadow:
+        0px var(--border-2x-thickness) 0px #0a58ca,
+        0 0 0 var(--border-thickness) #1a1a1b,
+        0 var(--border-2x-thickness) 0 var(--border-thickness) #1a1a1b;
+    color: white;
+}
+.button.primary:hover {
+    background-color: #0b5ed7;
+    border-color: #69a7fd;
+}
+.button.primary:active {
+    background-color: #0b5ed7;
+    border-color: #69a7fd;
+    box-shadow: 0 0 0 var(--border-thickness) #1a1a1b;
+    transform: translateY(var(--border-2x-thickness));
+}
+
+.button.secondary {
+    background-color: #6c757d;
+    color: white;
+    border: var(--border-thickness) solid #8b9196;
+    box-shadow:
+        0px var(--border-2x-thickness) 0px #565e64,
+        0 0 0 var(--border-thickness) #1a1a1b,
+        0 var(--border-2x-thickness) 0 var(--border-thickness) #1a1a1b;
+}
+.button.secondary:hover {
+    background-color: #5c636a;
+    border-color: #a1a6ab;
+}
+.button.secondary:active {
+    background-color: #5c636a;
+    border-color: #a1a6ab;
+    box-shadow: 0 0 0 var(--border-thickness) #1a1a1b;
+    transform: translateY(var(--border-2x-thickness));
+}
+
+.button.destructive {
+    background-color: #dc3545;
+    border: var(--border-thickness) solid #e4606d;
+    box-shadow:
+        0px var(--border-2x-thickness) 0px #b02a37,
+        0 0 0 var(--border-thickness) #1a1a1b,
+        0 var(--border-2x-thickness) 0 var(--border-thickness) #1a1a1b;
+    color: white;
+}
+.button.destructive:hover {
+    background-color: #bb2d3b;
+    border-color: #ea7f89;
+}
+.button.destructive:active {
+    background-color: #bb2d3b;
+    border-color: #ea7f89;
+    box-shadow: 0 0 0 var(--border-thickness) #1a1a1b;
+    transform: translateY(var(--border-2x-thickness));
+}
+
+.sidebar-buttons .button {
+    width: 100%;
+}
+
+.content {
+    grid-column: 2;
+    background-color: var(--bg-medium);
+    overflow-y: auto;
+    height: 100%;
+    border-left: 2px solid var(--border-color);
+}
+
+.heads-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px 15px 8px 15px;
+    border-bottom: var(--border-thickness) solid #333435;
+    box-shadow: 0px var(--border-thickness) 0px #5d5e5f;
+}
+
+.heads-list-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.content-body {
+    padding: 15px;
+}
+
+.options-column {
+    margin-bottom: 20px;
+}
+
+.deps-list-container {
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+.saved-pack-item {
+    padding: 12px;
+    margin-bottom: var(--border-2x-thickness);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-medium);
+    box-shadow:
+        0px var(--border-2x-thickness) 0px #4d4d4e,
+        0 0 0 var(--border-thickness) #1a1a1b,
+        0 var(--border-2x-thickness) 0 var(--border-thickness) #1a1a1b;
+    transition: transform 0.05s ease-in-out;
+}
+.saved-pack-item:hover {
+    background-color: #3c3c42;
+}
+
+.saved-pack-info {
+    flex: 1;
+    min-width: 0;
+    margin-right: 10px;
+    margin-bottom: 8px;
+}
+.saved-pack-info strong {
+    color: var(--header-bg);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.saved-pack-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.saved-pack-actions .button {
+    padding: 6px 12px;
+    font-size: 14px;
+    min-width: auto;
+}
+
+.manifest-preview-section h3 {
+    margin-bottom: 8px;
+}
+
+.preview-grid {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    align-items: flex-start;
+}
+
+.preview-panel {
+    flex: 1;
+    min-width: 300px;
+}
+
+.preview-panel h4 {
+    margin-bottom: 8px;
+}
+
+.preview-panel pre {
+    height: calc(100vh - 300px);
+    overflow: auto;
+    padding: 10px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.notes-section {
+    margin-top: 12px;
+}
+
+.notes-section ul {
+    color: #ddd;
+    margin-top: 6px;
+    margin-left: 20px;
+}
+
+.notes-section li {
+    margin-bottom: 4px;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.toast {
+    background-color: rgba(40, 40, 40, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 0;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border: var(--border-thickness) solid var(--border-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast.success {
+    background-color: rgba(25, 135, 84, 0.95);
+    border-color: #198754;
+    color: white;
+}
+
+.toast.error {
+    background-color: rgba(220, 53, 69, 0.95);
+    border-color: #dc3545;
+    color: white;
+}
+
+footer {
+    grid-column: 1 / span 5;
+    grid-row: 3;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    padding: 10px;
+    border-top: 4px solid #444;
+    position: relative;
+    z-index: 10;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+    border: 2px solid #3c3d3e;
+    box-shadow: inset 0 0 0 2px #1a1a1b;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--border-light);
+    border: var(--border-thickness) solid #929293;
+    box-shadow:
+        0 0 0 var(--border-thickness) #1a1a1b,
+        inset 0 0 0 1px var(--bg-medium);
+    min-height: 40px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #929293;
+    border-color: #b4b5b7;
+}
+::-webkit-scrollbar-corner {
+    background-color: var(--bg-darker);
+}
+
+@media (max-width: 900px) {
+    body {
+        overflow-y: auto;
+    }
+    .container {
+        height: auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    header {
+        position: static;
+    }
+    main {
+        flex: 1;
+        overflow-y: visible;
+    }
+    #pack-editor {
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar {
+        border-right: none;
+        border-bottom: 2px solid var(--border-color);
+        height: auto;
+    }
+    .content {
+        border-left: none;
+    }
+    .preview-grid {
+        flex-direction: column;
+    }
+    .preview-panel pre {
+        height: 320px;
+        max-height: 320px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Forg Pack</h1>
+    </header>
+
+    <main>
+        <div id="pack-editor">
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <div class="pack-info options-column">
+                        <h2>Pack Info</h2>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input id="pack-name" type="text" placeholder="My Addon" />
+                        </div>
+                        <div class="form-group">
+                            <label>Desc</label>
+                            <input id="pack-desc" type="text" placeholder="A short description..." />
+                        </div>
+                        <div class="form-group">
+                            <label>Version</label>
+                            <input id="pack-version" type="text" placeholder="1.0.0" value="1.0.0" />
+                        </div>
+                        <div class="form-group">
+                            <label>Min Engine Ver.</label>
+                            <input id="pack-min-engine" type="text" placeholder="1.20.0" value="1.20.0" />
+                        </div>
+                    </div>
+                    
+                    <div class="options-column">
+                        <h3>Advanced</h3>
+                        <div class="form-group">
+                            <label>BP Folder</label>
+                            <input id="bp-folder" type="text" placeholder="MyAddon_BP" />
+                        </div>
+                        <div class="form-group">
+                            <label>RP Folder</label>
+                            <input id="rp-folder" type="text" placeholder="MyAddon_RP" />
+                        </div>
+                        <div class="form-group">
+                            <label>Script Entry</label>
+                            <input id="script-entry" type="text" placeholder="scripts/main.js" value="scripts/main.js" />
+                        </div>
+                    </div>
+
+                    <div class="options-column">
+                        <h3>Dependencies</h3>
+                        <div id="deps-list" class="deps-list-container"></div>
+                        <div id="add-dep-form">
+                            <div class="form-group">
+                                <label>Module Name</label>
+                                <input id="dep-name" type="text" placeholder="@minecraft/server" />
+                            </div>
+                            <div class="form-group">
+                                <label>Module Version</label>
+                                <input id="dep-version" type="text" placeholder="1.9.0" />
+                            </div>
+                            <button id="add-dep-btn" class="button secondary" style="width: 100%;">Add Dependency</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-buttons">
+                    <button id="toggle-bp" class="button primary">Enable BP</button>
+                    <button id="toggle-rp" class="button primary">Enable RP</button>
+                    <button id="add-script-module" class="button secondary">Add Script</button>
+                    <button id="generate-zip" class="button primary">Generate & Download</button>
+                </div>
+            </aside>
+
+            <section class="content">
+                <div class="heads-list-header">
+                    <h2>Preview</h2>
+                    <div style="display:flex; gap:8px;">
+                        <button id="copy-json" class="button secondary">Copy JSON</button>
+                        <button id="reset-btn" class="button destructive">Reset</button>
+                    </div>
+                </div>
+
+                <div class="content-body">
+                    <div class="manifest-preview-section">
+                        <h3>Manifest Preview</h3>
+                        <div class="preview-grid">
+                            <div class="preview-panel">
+                                <h4>BP Manifest</h4>
+                                <pre id="bp-preview"></pre>
+                            </div>
+                            <div class="preview-panel">
+                                <h4>RP Manifest</h4>
+                                <pre id="rp-preview"></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notes-section">
+                        <h3>Notes</h3>
+                        <ul>
+                            <li>Enable <strong>Add Script</strong> and add dependency <code>@minecraft/server</code> for scripts to run.</li>
+                            <li>Manifest format is v2, as per official docs.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <small>Built according to manifest.json specs from Minecraft & Bedrock wiki.</small>
+    </footer>
+</div>
+
+<div class="toast-container">
+    <div id="toast" class="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+<script>
+const state = {
+    bpEnabled: false,
+    rpEnabled: false,
+    scriptEnabled: false,
+    deps: []
+};
+
+const el = id => document.getElementById(id);
+
+function genUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = crypto.getRandomValues(new Uint8Array(1))[0] & 15;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function verToArray(verStr) {
+    const parts = (verStr || '1.0.0').toString().split(/[._-]/).map(s => parseInt(s) || 0);
+    while (parts.length < 3) parts.push(0);
+    return [parts[0], parts[1], parts[2]];
+}
+
+function showToast(text, kind = '') {
+    const toast = el('toast');
+    toast.textContent = text;
+    toast.className = 'toast show';
+    if (kind) toast.classList.add(kind);
+    
+    setTimeout(() => {
+        toast.classList.remove('show', 'success', 'error');
+    }, 3000);
+}
+
+function renderDeps() {
+    const depsList = el('deps-list');
+    depsList.innerHTML = '';
+    
+    if (state.deps.length === 0) {
+        depsList.innerHTML = '<div style="color:#aaa; margin-bottom: 10px;">No dependencies added</div>';
+        return;
+    }
+    
+    state.deps.forEach((d, i) => {
+        const row = document.createElement('div');
+        row.className = 'saved-pack-item';
+        row.innerHTML = `
+            <div class="saved-pack-info">
+                <strong>${d.module_name}</strong>
+                <div style="color:#cfcfcf">Version: ${d.version}</div>
+            </div>
+            <div class="saved-pack-actions">
+                <button class="button secondary edit-btn" data-idx="${i}">Edit</button>
+                <button class="button destructive delete-btn" data-idx="${i}">Delete</button>
+            </div>
+        `;
+        depsList.appendChild(row);
+
+        row.querySelector('.edit-btn').addEventListener('click', () => {
+            const newVer = prompt(`Enter version for ${d.module_name}`, d.version || '1.0.0');
+            if (newVer !== null) {
+                state.deps[i].version = newVer;
+                renderDeps();
+                buildPreviews();
+            }
+        });
+
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+            if (confirm('Delete this dependency?')) {
+                state.deps.splice(i, 1);
+                renderDeps();
+                buildPreviews();
+            }
+        });
+    });
+}
+
+function addNewDependency() {
+    const nameInput = el('dep-name');
+    const versionInput = el('dep-version');
+    const name = nameInput.value.trim();
+    const version = versionInput.value.trim();
+
+    if (!name || !version) {
+        showToast('Module name and version are required.', 'error');
+        return;
+    }
+
+    state.deps.push({ module_name: name, version: version });
+    nameInput.value = '';
+    versionInput.value = '';
+    renderDeps();
+    buildPreviews();
+}
+
+function buildManifests() {
+    const name = (el('pack-name').value || 'My Addon').toString();
+    const desc = (el('pack-desc').value || 'Generated by Forg Pack').toString();
+    const versionRaw = (el('pack-version').value || '1.0.0').toString();
+    const minEngineRaw = (el('pack-min-engine').value || '1.20.0').toString();
+
+    const versionArr = verToArray(versionRaw);
+    const minEngineArr = verToArray(minEngineRaw);
+
+    const baseHeader = {
+        format_version: 2,
+        header: {
+            name,
+            description: desc,
+            uuid: genUUID(),
+            version: versionArr,
+            min_engine_version: minEngineArr
+        },
+        modules: [],
+        metadata: { product_type: "addon" }
+    };
+
+    let bp = null;
+    if (state.bpEnabled) {
+        bp = JSON.parse(JSON.stringify(baseHeader));
+        bp.modules.push({
+            type: "data",
+            uuid: genUUID(),
+            version: versionArr
+        });
+        if (state.scriptEnabled) {
+            bp.modules.push({
+                type: "script",
+                language: "javascript",
+                entry: (el('script-entry').value || 'scripts/main.js'),
+                uuid: genUUID(),
+                version: versionArr
+            });
+        }
+        if (state.deps.length > 0) {
+            bp.dependencies = state.deps.map(d => ({ module_name: d.module_name, version: d.version }));
+        }
+    }
+
+    let rp = null;
+    if (state.rpEnabled) {
+        rp = JSON.parse(JSON.stringify(baseHeader));
+        rp.header.uuid = genUUID();
+        rp.modules = [{
+            type: "resources",
+            uuid: genUUID(),
+            version: versionArr
+        }];
+        if (bp) {
+           rp.dependencies = [{ uuid: bp.header.uuid, version: bp.header.version }];
+        }
+    }
+
+    return { bp, rp };
+}
+
+function buildPreviews() {
+    const { bp, rp } = buildManifests();
+    el('bp-preview').textContent = bp ? JSON.stringify(bp, null, 2) : 'Not activated';
+    el('rp-preview').textContent = rp ? JSON.stringify(rp, null, 2) : 'Not activated';
+}
+
+async function generateZipAndDownload() {
+    const { bp, rp } = buildManifests();
+    const zip = new JSZip();
+
+    const baseName = (el('pack-name').value || 'MyAddon').replace(/[\\\/#%&{}<>*? $!':@+`|=]/g, '_');
+    const bpFolderName = el('bp-folder').value.trim() || (baseName + '_BP');
+    const rpFolderName = el('rp-folder').value.trim() || (baseName + '_RP');
+
+    if (bp) {
+        const path = `behavior_packs/${bpFolderName}/`;
+        zip.folder(path).file('manifest.json', JSON.stringify(bp, null, 2));
+        if (state.scriptEnabled) {
+            const entry = el('script-entry').value || 'scripts/main.js';
+            const sample = `import { world } from "@minecraft/server";\nworld.sendMessage("Hello from Forg Pack!");\n`;
+            zip.folder(path + entry.replace(/[^\/]*$/, '')).file(entry.split('/').pop(), sample);
+        }
+    }
+
+    if (rp) {
+        const path = `resource_packs/${rpFolderName}/`;
+        zip.folder(path).file('manifest.json', JSON.stringify(rp, null, 2));
+    }
+
+    if (!bp && !rp) return;
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+    saveAs(blob, `${baseName}.mcaddon`);
+    showToast('Pack Downloaded', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    el('toggle-bp').addEventListener('click', () => {
+        state.bpEnabled = !state.bpEnabled;
+        el('toggle-bp').textContent = state.bpEnabled ? 'BP ✓' : 'Enable BP';
+        buildPreviews();
+    });
+
+    el('toggle-rp').addEventListener('click', () => {
+        state.rpEnabled = !state.rpEnabled;
+        el('toggle-rp').textContent = state.rpEnabled ? 'RP ✓' : 'Enable RP';
+        buildPreviews();
+    });
+
+    el('add-script-module').addEventListener('click', () => {
+        state.scriptEnabled = !state.scriptEnabled;
+        el('add-script-module').textContent = state.scriptEnabled ? 'Script Added ✓' : 'Add Script';
+        buildPreviews();
+    });
+
+    el('add-dep-btn').addEventListener('click', addNewDependency);
+
+    el('generate-zip').addEventListener('click', async () => {
+        if (!state.bpEnabled && !state.rpEnabled) {
+            showToast('Enable BP or RP first', 'error');
+            return;
+        }
+        await generateZipAndDownload();
+    });
+
+    el('copy-json').addEventListener('click', () => {
+        const bpText = el('bp-preview').textContent;
+        const rpText = el('rp-preview').textContent;
+        let txt = '';
+        if (bpText !== 'BP disabled') txt += 'BP Manifest:\n' + bpText;
+        if (rpText !== 'RP disabled') txt += '\n\nRP Manifest:\n' + rpText;
+        if(txt) navigator.clipboard.writeText(txt).then(() => showToast('JSON Copied', 'success'));
+    });
+
+    el('reset-btn').addEventListener('click', () => {
+        if (!confirm('Reset all fields?')) return;
+        el('pack-name').value = '';
+        el('pack-desc').value = '';
+        el('pack-version').value = '1.0.0';
+        el('pack-min-engine').value = '1.20.0';
+        el('bp-folder').value = '';
+        el('rp-folder').value = '';
+        el('script-entry').value = 'scripts/main.js';
+        el('dep-name').value = '';
+        el('dep-version').value = '';
+        state.bpEnabled = false;
+        state.rpEnabled = false;
+        state.scriptEnabled = false;
+        state.deps = [];
+        el('toggle-bp').textContent = 'Enable BP';
+        el('toggle-rp').textContent = 'Enable RP';
+        el('add-script-module').textContent = 'Add Script';
+        renderDeps();
+        buildPreviews();
+    });
+
+    ['pack-name', 'pack-desc', 'pack-version', 'pack-min-engine', 'bp-folder', 'rp-folder', 'script-entry'].forEach(id => {
+        el(id).addEventListener('input', buildPreviews);
+    });
+
+    renderDeps();
+    buildPreviews();
+});
+</script>
+</body>
+</html>
