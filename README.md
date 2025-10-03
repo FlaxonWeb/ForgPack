@@ -52,7 +52,7 @@ Fill in the core metadata for your addon.
 This section is for adding **module dependencies** to your **Behavior Pack**, primarily for scripting APIs.
 
 1.  Enter the **Module Name** (e.g., `@minecraft/server`).
-2.  Enter the **Module Version** (e.g., `1.9.0`).
+2.  Enter the **Module Version** (e.g., `2.2.0`).
 3.  Click **"Add Dependency"**.
 
 You can **Edit** or **Delete** existing dependencies from the list.
