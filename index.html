@@ -776,7 +776,7 @@ async function generateZipAndDownload() {
     if (!bp && !rp) return;
 
     const blob = await zip.generateAsync({ type: 'blob' });
-    saveAs(blob, `${baseName}.mcaddon`);
+    saveAs(blob, `${baseName}.zip`);
     showToast('Pack Downloaded', 'success');
 }
 
@@ -849,4 +849,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
+
 </html>
