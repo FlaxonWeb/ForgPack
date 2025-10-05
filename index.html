@@ -783,13 +783,13 @@ async function generateZipAndDownload() {
 document.addEventListener('DOMContentLoaded', () => {
     el('toggle-bp').addEventListener('click', () => {
         state.bpEnabled = !state.bpEnabled;
-        el('toggle-bp').textContent = state.bpEnabled ? 'BP ✓' : 'Enable BP';
+        el('toggle-bp').textContent = state.bpEnabled ? 'BP Enable' : 'Enable BP';
         buildPreviews();
     });
 
     el('toggle-rp').addEventListener('click', () => {
         state.rpEnabled = !state.rpEnabled;
-        el('toggle-rp').textContent = state.rpEnabled ? 'RP ✓' : 'Enable RP';
+        el('toggle-rp').textContent = state.rpEnabled ? 'RP Enable' : 'Enable RP';
         buildPreviews();
     });
 
@@ -851,3 +851,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
